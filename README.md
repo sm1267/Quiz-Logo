@@ -1,3 +1,10 @@
+## Logo Quiz
+
+
+# Descriere
+Un joc interactiv in care jucatorul ghiceste un logo din diferite domenii(fotbal,brand-uri de masini,etc.). Aceasta aplicatie va avea diferite nivele si acestea vor creste in dificultate pe masura ce jucatorul avanseaza.
+
+
 # Nu primesc notă pentru că nu am pus titlu și descriere
 
 ### Important!

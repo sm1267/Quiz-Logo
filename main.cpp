@@ -163,8 +163,8 @@ int main() {
 
     std::string line;
     std::ifstream file("nivele.txt");
-    int i = 1;
     if (file.is_open()) {
+        int i = 1;
         while (getline(file, line)) {
             int len = line.size();
             Level[i].setLungime(len);

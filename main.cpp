@@ -61,6 +61,8 @@ private:
     bool Rezolvat;
     std::string Nume;
 public:
+    Nivel(int lungime, bool rezolvat, const std::string &nume) : Lungime(lungime), Rezolvat(rezolvat), Nume(nume) {}
+        
     void printBox(int l) {
         std::string separator = "-";
         std::string padding = "|";

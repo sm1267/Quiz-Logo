@@ -136,7 +136,7 @@ public:
 
     void sortPlayers() {
         std::sort(players.begin(), players.end(), [](const Jucator& a, const Jucator& b) {
-            return a.getHighscore() > b.getHighscore();  // Sort in descending order
+            return a.getHighscore() > b.getHighscore();  
             });
     }
 

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <random>
 
 
 
@@ -21,21 +22,21 @@ void quiz() {
 
 
 
-class Jucator {
+class Player {
 private:
-    std::string Nume;
+    std::string Name;
     int Highscore;
 public:
-    Jucator(const std::string& nume, int highscore) : Nume(nume), Highscore(highscore) {}
+    Player(const std::string& name, int highscore) : Name(name), Highscore(highscore) {}
 
-    Jucator(const Jucator& other) : Nume{ other.Nume }, Highscore{ other.Highscore } {}
+    Player(const Player& other) : Name{ other.Name }, Highscore{ other.Highscore } {}
 
-    const std::string& getNume() const {
-        return Nume;
+    const std::string& getName() const {
+        return Name;
     }
 
-    void setNume(const std::string& nume) {
-        Nume = nume;
+    void setName(const std::string& name) {
+        Name = name;
     }
 
     int getHighscore() const {
@@ -46,23 +47,24 @@ public:
         Highscore = highscore;
     }
 
-    virtual ~Jucator() {
+    virtual ~Player() {
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Jucator& jucator) {
-        os << "Nume: " << jucator.Nume << std::endl << "Scor: " << jucator.Highscore << std::endl;
+    friend std::ostream& operator<<(std::ostream& os, const Player& player) {
+        os << "Nume: " << player.Name << std::endl << "Scor: " << player.Highscore << std::endl;
         return os;
     }
 };
 
-class Nivel {
+class Level {
 private:
-    int Lungime;
-    bool Rezolvat;
-    std::string Nume;
+    int Length;
+    bool Solved;
+    std::string Name;
 public:
-    Nivel() = default;
-        
+    Level() = default;
+    ~Level() = default;
+
     void printBox(int l) {
         std::string separator = "-";
         std::string padding = "|";
@@ -83,7 +85,7 @@ public:
     }
 
     void printLogo(std::string nume) {
-        nume = nume + ".txt";
+        nume = "logos/" + nume + ".txt";
         std::fstream myFile;
         myFile.open(nume, std::ios::in);
         if (myFile.is_open()) {
@@ -96,39 +98,39 @@ public:
         std::cout << std::endl;
     }
 
-    int getLungime() const {
-        return Lungime;
+    int getLength() const {
+        return Length;
     }
 
-    void setLungime(int lungime) {
-        Lungime = lungime;
+    void setLength(int length) {
+        Length = length;
     }
 
-    const std::string& getNume() const {
-        return Nume;
+    const std::string& getName() const {
+        return Name;
     }
 
-    void setNume(const std::string& nume) {
-        Nume = nume;
+    void setName(const std::string& name) {
+        Name = name;
     }
 
-    bool isRezolvat() const {
-        return Rezolvat;
+    bool isSolved() const {
+        return Solved;
     }
 
-    void setRezolvat(bool rezolvat) {
-        Rezolvat = rezolvat;
+    void setSolved(bool solved) {
+        Solved = solved;
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Nivel& nivel) {
-        os << "Lungime: " << nivel.Lungime << " Rezolvat: " << nivel.Rezolvat << " Nume: " << nivel.Nume;
+    friend std::ostream& operator<<(std::ostream& os, const Level& level) {
+        os << "Lungime: " << level.Length << " Rezolvat: " << level.Solved << " Nume: " << level.Name;
         return os;
     }
 };
 
 class Leaderboard {
 private:
-    std::vector<Jucator> players;
+    std::vector<Player> players;
 
 public:
     void addPlayer(const std::string& name, int score) {
@@ -137,21 +139,21 @@ public:
     }
 
     void sortPlayers() {
-        std::sort(players.begin(), players.end(), [](const Jucator& a, const Jucator& b) {
-            return a.getHighscore() > b.getHighscore();  
-            });
+        std::sort(players.begin(), players.end(), [](const Player& a, const Player& b) {
+            return a.getHighscore() > b.getHighscore();
+        });
     }
 
     void displayLeaderboard() {
         std::cout << "Leaderboard:\n";
         for (size_t i = 0; i < players.size(); ++i) {
-            std::cout << i + 1 << ". " << players[i].getNume() << " - " << players[i].getHighscore() << "\n";
+            std::cout << i + 1 << ". " << players[i].getName() << " - " << players[i].getHighscore() << "\n";
         }
     }
 
 };
 
-Nivel Level[21];
+Level level[21];
 
 int main() {
     quiz();
@@ -159,44 +161,49 @@ int main() {
     std::string nume;
     std::cout << "Nume Jucator:" << std::endl;
     std::getline(std::cin, nume);
-    Jucator Player(nume, 0);
+    Player Player(nume, 0);
 
     std::string input;
 
+
     std::string line;
-    std::ifstream file("nivele.txt");
+    std::ifstream file("logos/nivele.txt");
     if (file.is_open()) {
         int i = 1;
         while (getline(file, line)) {
             int len = line.size();
-            Level[i].setLungime(len);
-            Level[i].setNume(line);
+            level[i].setLength(len);
+            level[i].setName(line);
             i++;
         }
         file.close();
     }
-    
+
     bool correct = true;
 
-    srand(time(0));
-    int v;
-    while(correct){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 1;
+    int max = 20;
+
+    while (correct) {
         do {
-            v = rand() % 20 + 1;
-            while(Level[v].isRezolvat() == true) {
-                v = rand() % 20 + 1;
+            std::uniform_int_distribution<> dis(min, max);
+            int v = dis(gen);
+            while (level[v].isSolved() == true) {
+                v = dis(gen);
             }
-            std::string answer = Level[v].getNume();
+            std::string answer = level[v].getName();
             std::cout << "Numiti Brand-ul sau apasati tasta Q pentru a iesi: \n" << std::endl;
-            Level[v].printLogo(answer);
-            Level[v].printBox(Level[v].getLungime());
+            level[v].printLogo(answer);
+            level[v].printBox(level[v].getLength());
             std::getline(std::cin, input);
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
             if (input == answer) {
                 int hs = Player.getHighscore();
                 hs++;
                 Player.setHighscore(hs);
-                Level[v].setRezolvat(true);
+                level[v].setSolved(true);
                 system("cls");
             }
             else {
@@ -216,7 +223,7 @@ int main() {
     }
 
     Leaderboard l;
-    l.addPlayer(Player.getNume(), Player.getHighscore());
+    l.addPlayer(Player.getName(), Player.getHighscore());
 
     if (Player.getHighscore() == 20)
         std::cout << "Ai castigat! (20/20)" << std::endl;
@@ -226,3 +233,4 @@ int main() {
     l.displayLeaderboard();
     return 0;
 }
+

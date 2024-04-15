@@ -12,7 +12,7 @@ public:
     Level() = default;
     ~Level() = default;
 
-    void printBox(int l) {
+    static void printBox(int l) {
         std::string separator = "-";
         std::string padding = "|";
         std::string text = "|";
@@ -33,7 +33,7 @@ public:
 
     virtual void printLogo(std::string nume) = 0;
 
-    int getLength() const {
+    [[nodiscard]] int getLength() const {
         return Length;
     }
 
@@ -41,7 +41,7 @@ public:
         Length = length;
     }
 
-    const std::string& getName() const {
+    [[nodiscard]] const std::string& getName() const {
         return Name;
     }
 
@@ -49,7 +49,7 @@ public:
         Name = name;
     }
 
-    bool isSolved() const {
+    [[nodiscard]] bool isSolved() const {
         return Solved;
     }
 

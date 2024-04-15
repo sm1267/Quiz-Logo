@@ -12,11 +12,12 @@ public:
     Player(const std::string& name, int highscore) : Name(name), Highscore(highscore) {}
     virtual ~Player() = default;
 
-    const std::string& getName() const {
+    [[nodiscard]] const std::string& getName() const {
         return Name;
     }
 
-    int getHighscore() const {
+
+    [[nodiscard]] int getHighscore() const {
         return Highscore;
     }
 

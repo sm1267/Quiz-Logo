@@ -56,7 +56,7 @@ int main() {
         do {
             std::uniform_int_distribution<> dis(min, max);
             int v = dis(gen);
-            while (level[v].isSolved() == true) {
+            while (level[v].isSolved()) {
                 v = dis(gen);
             }
             std::string answer = level[v].getName();

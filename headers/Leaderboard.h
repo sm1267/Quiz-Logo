@@ -1,7 +1,3 @@
-//
-// Created by Mae on 4/13/2024.
-//
-
 #ifndef QUIZ_LOGO_LEADERBOARD_H
 #define QUIZ_LOGO_LEADERBOARD_H
 #include <iostream>
@@ -32,6 +28,5 @@ public:
     }
 
 };
-
 
 #endif //QUIZ_LOGO_LEADERBOARD_H

@@ -6,6 +6,12 @@
 #include "headers/Level.h"
 #include "headers/Leaderboard.h"
 
+bool correct = true;
+std::random_device rd;
+std::mt19937 gen(rd());
+int min = 1;
+int max = 20;
+Cars level[21];
 
 void quiz() {
     std::cout << " ___       ________  ________  ________          ________  ___  ___  ___  ________     " << std::endl;
@@ -20,21 +26,9 @@ void quiz() {
 
 }
 
-Level level[21];
-
-int main() {
-    quiz();
-
-    std::string nume;
-    std::cout << "Nume Jucator:" << std::endl;
-    std::getline(std::cin, nume);
-    Player Player(nume, 0);
-
-    std::string input;
-
-
+void levelRead(int input){
     std::string line;
-    std::ifstream file("logos/nivele.txt");
+    std::ifstream file("logos/cars/nivele.txt");
     if (file.is_open()) {
         int i = 1;
         while (getline(file, line)) {
@@ -45,13 +39,27 @@ int main() {
         }
         file.close();
     }
+}
 
-    bool correct = true;
+int main() {
+    quiz();
+    std::string nume;
+    std::cout << "Nume Jucator:" << std::endl;
+    std::getline(std::cin, nume);
+    Player Player(nume, 0);
+    int x = 0;
+    /*do{
+        std::cout<<"Alegeti categoria (1 - CARS / 2 - ENTERTAINMENT / 3 - CONSUMER)";
+        std::cin >> x;
+
+    } while (!(x == 1 || x == 2 || x == 3));
+    */
+    levelRead(x);
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    int min = 1;
-    int max = 20;
+
+    std::string input;
 
     while (correct) {
         do {

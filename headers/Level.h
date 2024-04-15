@@ -1,14 +1,10 @@
-//
-// Created by Mae on 4/13/2024.
-//
-
 #ifndef QUIZ_LOGO_LEVEL_H
 #define QUIZ_LOGO_LEVEL_H
 #include <iostream>
 #include <fstream>
 
 class Level {
-private:
+protected:
     int Length;
     bool Solved;
     std::string Name;
@@ -35,19 +31,7 @@ public:
         std::cout << separator << std::endl;
     }
 
-    void printLogo(std::string nume) {
-        nume = "logos/" + nume + ".txt";
-        std::fstream myFile;
-        myFile.open(nume, std::ios::in);
-        if (myFile.is_open()) {
-            std::string line;
-            while (getline(myFile, line)) {
-                std::cout << line << std::endl;
-            }
-        }
-        myFile.close();
-        std::cout << std::endl;
-    }
+    virtual void printLogo(std::string nume) = 0;
 
     int getLength() const {
         return Length;
@@ -78,5 +62,66 @@ public:
         return os;
     }
 };
+
+class Cars : public Level{
+public:
+    Cars() = default;
+    virtual ~Cars() = default;
+
+    void printLogo(std::string nume) override{
+        nume = "logos/cars/" + nume + ".txt";
+        std::fstream myFile;
+        myFile.open(nume, std::ios::in);
+        if (myFile.is_open()) {
+            std::string line;
+            while (getline(myFile, line)) {
+                std::cout << line << std::endl;
+            }
+        }
+        myFile.close();
+        std::cout << std::endl;
+    }
+};
+
+class Entertainment : public Level{
+public:
+    Entertainment() = default;
+    virtual ~Entertainment() = default;
+
+    void printLogo(std::string nume) override{
+        nume = "logos/entertainment/" + nume + ".txt";
+        std::fstream myFile;
+        myFile.open(nume, std::ios::in);
+        if (myFile.is_open()) {
+            std::string line;
+            while (getline(myFile, line)) {
+                std::cout << line << std::endl;
+            }
+        }
+        myFile.close();
+        std::cout << std::endl;
+    }
+};
+
+class Consumer : public Level{
+public:
+    Consumer() = default;
+    virtual ~Consumer() = default;
+
+    void printLogo(std::string nume) override{
+        nume = "logos/consumer/" + nume + ".txt";
+        std::fstream myFile;
+        myFile.open(nume, std::ios::in);
+        if (myFile.is_open()) {
+            std::string line;
+            while (getline(myFile, line)) {
+                std::cout << line << std::endl;
+            }
+        }
+        myFile.close();
+        std::cout << std::endl;
+    }
+};
+
 
 #endif //QUIZ_LOGO_LEVEL_H

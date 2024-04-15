@@ -7,8 +7,6 @@
 #include "headers/Leaderboard.h"
 
 bool correct = true;
-std::random_device rd;
-std::mt19937 gen(rd());
 int min = 1;
 int max = 20;
 Cars level[21];

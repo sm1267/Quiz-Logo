@@ -26,7 +26,7 @@ void quiz() {
 
 }
 
-void levelRead(int input){
+void levelRead(){
     std::string line;
     std::ifstream file("logos/cars/nivele.txt");
     if (file.is_open()) {
@@ -47,14 +47,7 @@ int main() {
     std::cout << "Nume Jucator:" << std::endl;
     std::getline(std::cin, nume);
     Player Player(nume, 0);
-    int x = 0;
-    /*do{
-        std::cout<<"Alegeti categoria (1 - CARS / 2 - ENTERTAINMENT / 3 - CONSUMER)";
-        std::cin >> x;
-
-    } while (!(x == 1 || x == 2 || x == 3));
-    */
-    levelRead(x);
+    levelRead();
 
     std::random_device rd;
     std::mt19937 gen(rd());

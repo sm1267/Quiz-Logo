@@ -34,7 +34,7 @@ std::vector<Level*> createObjects(Category category) {
     return items;
 }
 
-void displayObject(Level* item, int x, std::string nume) {
+void displayObject(Level* item, int x, const std::string& nume) {
     if(x == 1) {
         Cars *Ptr = dynamic_cast<Cars *>(item);
         if (Ptr) {
@@ -42,13 +42,13 @@ void displayObject(Level* item, int x, std::string nume) {
         }
     }
     else if (x == 2) {
-        Entertainment *Ptr = dynamic_cast<Entertainment*>(item);
+        auto *Ptr = dynamic_cast<Entertainment*>(item);
         if (Ptr) {
             Ptr->printLogo(nume);
         }
     }
     else {
-        Consumer *Ptr = dynamic_cast<Consumer*>(item);
+        auto *Ptr = dynamic_cast<Consumer*>(item);
         if(Ptr){
             Ptr->printLogo(nume);
         }

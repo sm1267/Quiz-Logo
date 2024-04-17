@@ -2,14 +2,62 @@
 #include <string>
 #include <fstream>
 #include <random>
+#include <vector>
+#include <stdexcept>
 #include "headers/Player.h"
 #include "headers/Level.h"
 #include "headers/Leaderboard.h"
 
+enum Category {
+    CARS,
+    CONSUMER,
+    ENTERTAINMENT
+};
+
+std::vector<Level*> createObjects(Category category) {
+    std::vector<Level*> items;
+    for (int i = 0; i < 20; ++i) {
+        switch (category) {
+            case CARS:
+                items.push_back(new Cars());
+                break;
+            case ENTERTAINMENT:
+                items.push_back(new Entertainment());
+                break;
+            case CONSUMER:
+                items.push_back(new Consumer());
+                break;
+            default:
+                break;
+        }
+    }
+    return items;
+}
+
+void displayObject(Level* item, int x, std::string nume) {
+    if(x == 1) {
+        Cars *Ptr = dynamic_cast<Cars *>(item);
+        if (Ptr) {
+            Ptr->printLogo(nume);
+        }
+    }
+    else if (x == 2) {
+        Entertainment *Ptr = dynamic_cast<Entertainment*>(item);
+        if (Ptr) {
+            Ptr->printLogo(nume);
+        }
+    }
+    else {
+        Consumer *Ptr = dynamic_cast<Consumer*>(item);
+        if(Ptr){
+            Ptr->printLogo(nume);
+        }
+    }
+}
+
 bool correct = true;
 int min = 1;
 int max = 20;
-Cars level[21];
 
 void quiz() {
     std::cout << " ___       ________  ________  ________          ________  ___  ___  ___  ________     " << std::endl;
@@ -21,22 +69,6 @@ void quiz() {
     std::cout << "    \\|_______|\\|_______|\\|_______|\\|_______|        \\|___| \\__\\|_______|\\|__|\\|_______|" << std::endl;
     std::cout << "                                                          \\|__|                        " << std::endl;
     std::cout << "                                                                                       " << std::endl;
-
-}
-
-void levelRead(){
-    std::string line;
-    std::ifstream file("logos/cars/nivele.txt");
-    if (file.is_open()) {
-        int i = 1;
-        while (getline(file, line)) {
-            int len = line.size();
-            level[i].setLength(len);
-            level[i].setName(line);
-            i++;
-        }
-        file.close();
-    }
 }
 
 int main() {
@@ -45,7 +77,43 @@ int main() {
     std::cout << "Nume Jucator:" << std::endl;
     std::getline(std::cin, nume);
     Player Player(nume, 0);
-    levelRead();
+
+    /*std::string mod;
+    int x;
+    std::cout<<"Alegeti categoria (1 - MASINI / 2 - ENTERTAINMENT / 3 - GOODS)" << std::endl;
+    std::cin >> mod;
+    try{
+        x = std::stoi(mod);
+        if(x != 1 && x != 2 && x != 3) {
+            throw std::invalid_argument("Numar invalid! Alegeti intre 1 , 2 sau 3.");
+        }
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Eroare: " << e.what() << std::endl;
+        return 1;
+    }
+    catch (const std::out_of_range& e) {
+        std::cerr << "Eroare: " << e.what() << std::endl;
+        return 1;
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Eroare: " << e.what() << std::endl;
+        return 1;
+    }*/
+
+    std::vector<Level*> level = createObjects(ENTERTAINMENT);
+    std::string line;
+    std::string s = "logos/entertainment/nivele.txt";
+    std::ifstream file(s);
+    if (file.is_open()) {
+        int i = 0;
+        while (getline(file, line)) {
+            int len = line.size();
+            level[i]->setName(line);
+            level[i]->setLength(len);
+            i++;
+        }
+        file.close();
+    }
 
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -56,20 +124,20 @@ int main() {
         do {
             std::uniform_int_distribution<> dis(min, max);
             int v = dis(gen);
-            while (level[v].isSolved()) {
+            while (level[v]->isSolved()) {
                 v = dis(gen);
             }
-            std::string answer = level[v].getName();
+            std::string answer = level[v]->getName();
             std::cout << "Numiti Brand-ul sau apasati tasta Q pentru a iesi: \n" << std::endl;
-            level[v].printLogo(answer);
-            level[v].printBox(level[v].getLength());
+            displayObject(level[v], 2,level[v]->getName());
+            level[v]->printBox(level[v]->getLength());
             std::getline(std::cin, input);
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
             if (input == answer) {
                 int hs = Player.getHighscore();
                 hs++;
                 Player.setHighscore(hs);
-                level[v].setSolved(true);
+                level[v]->setSolved(true);
                 system("cls");
             }
             else {
@@ -99,4 +167,3 @@ int main() {
     l.displayLeaderboard();
     return 0;
 }
-

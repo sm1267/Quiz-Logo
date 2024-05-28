@@ -8,7 +8,7 @@ class FileHandler {
 private:
     std::ifstream file;
 public:
-    FileHandler(const std::string& filename): file(filename) {
+    explicit FileHandler(const std::string& filename): file(filename) {
         if(!file.is_open()){
             throw std::runtime_error("Fisierul nu s-a putut deschide.");
         }

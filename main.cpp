@@ -1,12 +1,13 @@
 #include <iostream>
 #include <string>
-#include <fstream>
 #include <random>
 #include <vector>
+#include <algorithm>
 #include <stdexcept>
 #include "headers/Player.h"
 #include "headers/Level.h"
 #include "headers/Leaderboard.h"
+#include "headers/FileHandler.h"
 
 enum Category {
     CARS,
@@ -76,7 +77,7 @@ int main() {
     std::string nume;
     std::cout << "Nume Jucator:" << std::endl;
     std::getline(std::cin, nume);
-    Player Player(nume, 0);
+    Player player(nume, 0);
 
     /*std::string mod;
     int x;
@@ -101,18 +102,18 @@ int main() {
     }*/
 
     std::vector<Level*> level = createObjects(ENTERTAINMENT);
-    std::string line;
-    std::string s = "logos/entertainment/nivele.txt";
-    std::ifstream file(s);
-    if (file.is_open()) {
+    try{
+        FileHandler fileHandler("logos/entertainment/nivele.txt");
+        std:: string line;
         int i = 0;
-        while (getline(file, line)) {
+        while(fileHandler.readLine(line)) {
             int len = line.size();
             level[i]->setName(line);
             level[i]->setLength(len);
             i++;
         }
-        file.close();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
 
     std::random_device rd;
@@ -134,9 +135,9 @@ int main() {
             std::getline(std::cin, input);
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
             if (input == answer) {
-                int hs = Player.getHighscore();
+                int hs = player.getHighscore();
                 hs++;
-                Player.setHighscore(hs);
+                player.setHighscore(hs);
                 level[v]->setSolved(true);
                 system("cls");
             }
@@ -144,7 +145,7 @@ int main() {
                 correct = false;
                 break;
             }
-            if (Player.getHighscore() == 20)
+            if (player.getHighscore() == 20)
                 break;
         } while (input != "q");
         if (input == "q")
@@ -152,18 +153,29 @@ int main() {
             std::cout << "Quit game" << std::endl;
             break;
         }
-        if (Player.getHighscore() == 20)
+        if (player.getHighscore() == 20)
             break;
     }
 
-    Leaderboard l;
-    l.addPlayer(Player.getName(), Player.getHighscore());
+    Player a = playerFactory::Alex();
+    Player c = playerFactory::Covrig();
+    Player i = playerFactory::Ion();
+    Player m = playerFactory::Marcel();
 
-    if (Player.getHighscore() == 20)
+    Leaderboard<int>& leaderboard = Leaderboard<int>::getInstance();
+    leaderboard.addPlayer(player.getName(), player.getHighscore());
+    leaderboard.addPlayer(a.getName(), a.getHighscore());
+    leaderboard.addPlayer(c.getName(), c.getHighscore());
+    leaderboard.addPlayer(i.getName(), i.getHighscore());
+    leaderboard.addPlayer(m.getName(),m.getHighscore());
+    leaderboard.sortPlayers();
+
+    if (player.getHighscore() == 20)
         std::cout << "Ai castigat! (20/20)" << std::endl;
     else
-        operator<<(std::cout, Player);
+        operator<<(std::cout, player);
 
-    l.displayLeaderboard();
+    std::cout << "Leaderboard: " << std::endl;
+    leaderboard.displayLeaderboard();
     return 0;
 }

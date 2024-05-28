@@ -32,4 +32,13 @@ public:
 
 };
 
+class playerFactory {
+public:
+    static Player Ion() { return Player("Ion", 6);}
+    static Player Marcel() { return Player("Marcel", 11);}
+    static Player Covrig() { return Player("Covrig", 2);}
+    static Player Alex() { return Player("Alex", 0);}
+};
+
+
 #endif //QUIZ_LOGO_PLAYER_H

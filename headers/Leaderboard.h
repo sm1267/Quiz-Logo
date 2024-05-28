@@ -4,29 +4,46 @@
 #include <vector>
 #include <algorithm>
 
+template <typename T>
+class leaderboardPlayer {
+public:
+    std::string Name;
+    T Score;
+
+    leaderboardPlayer(const std::string& name, T score) : Name(name), Score(score){}
+};
+
+template <typename T>
+bool compare(const leaderboardPlayer<T>& x, const leaderboardPlayer<T>& y) {
+    return x.Score > y.Score;
+}
+
+template <typename T>
 class Leaderboard {
 private:
-    std::vector<Player> players;
-
+    std::vector<leaderboardPlayer<T>> Players;
+    Leaderboard() = default;
+    Leaderboard(const Leaderboard&) = delete;
+    Leaderboard& operator=(const Leaderboard&) = delete;
 public:
-    void addPlayer(const std::string& name, int score) {
-        players.push_back({ name, score });
-        sortPlayers();
+    static Leaderboard<T>& getInstance() {
+        static Leaderboard<T> instance;
+        return instance;
+    }
+
+    void addPlayer(const std::string& name, T score){
+        Players.emplace_back(name,score);
     }
 
     void sortPlayers() {
-        std::sort(players.begin(), players.end(), [](const Player& a, const Player& b) {
-            return a.getHighscore() > b.getHighscore();
-        });
+        std::sort(Players.begin(), Players.end(), compare<T>);
     }
 
-    void displayLeaderboard() {
-        std::cout << "Leaderboard:\n";
-        for (size_t i = 0; i < players.size(); ++i) {
-            std::cout << i + 1 << ". " << players[i].getName() << " - " << players[i].getHighscore() << "\n";
+    void displayLeaderboard() const {
+        for (const auto& player : Players){
+            std::cout << player.Name << ": " << player.Score << std::endl;
         }
     }
-
 };
 
 #endif //QUIZ_LOGO_LEADERBOARD_H
